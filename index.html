@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+
+
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Grocery Agent</title>
+  <style>
+    body { font-family: Arial; margin: 40px; }
+    textarea { width: 100%; height: 100px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>🛒 AI Grocery Ordering Agent</h1>
+  <form method="post">
+    <label>Enter your grocery note:</label><br>
+    <textarea name="note" required></textarea><br><br>
+    <button type="submit">Analyze</button>
+  </form>
+
+  {% if grocery_list %}
+    <h2>🧠 Gemini Output:</h2>
+    <ul>
+      {% for item in grocery_list %}
+        <li>{{ item['quantity'] }} {{ item['item'] }} - Brand: {{ item['brand'] }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if blinkit_results %}
+    <h2>🔍 Blinkit Results:</h2>
+    <table>
+      <tr>
+        <th>Requested Item</th>
+        <th>Top Product</th>
+        <th>Price</th>
+      </tr>
+      {% for result in blinkit_results %}
+        <tr>
+          <td>{{ result.item }}</td>
+          <td>{{ result.product_name }}</td>
+          <td>{{ result.price }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <p>✅ Cart Ready. Would you like to proceed to payment?</p>
+  {% endif %}
+</body>
+</html>
+
+
+{% if previous_data %}
+  <h2>🧾 Last Saved Cart (from JSON):</h2>
+  <ul>
+    {% for item in previous_data.grocery_list %}
+      <li>{{ item['item'] }} - {{ item['quantity'] }} ({{ item['brand'] }})</li>
+    {% endfor %}
+  </ul>
+  <h3>Cart Items:</h3>
+  <ul>
+    {% for item in previous_data.cart %}
+      <li>{{ item.product_name }} - {{ item.price }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+{% if total_cost %}
+  <h3>🧾 Estimated Total Cost: ₹{{ total_cost }}</h3>
+{% endif %}
+
